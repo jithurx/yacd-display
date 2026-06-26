@@ -109,15 +109,26 @@ elif [ "$mode_choice" = "5" ]; then
     echo "========================================================="
     sleep 2
     
-    echo "[1/3] Enabling SPI in boot config..."
+    echo "[1/3] Enabling SPI and loading overlays..."
     if ! grep -q "^dtparam=spi=on" /boot/config.txt; then
         echo "dtparam=spi=on" >> /boot/config.txt
     fi
     
-    echo "[2/3] Adding piscreen DRM overlay..."
+    echo "[2/3] Adding tft35a DRM overlay..."
+    # Copy the custom overlay to the boot partition
+    cp ./usr/tft35a-overlay.dtb /boot/overlays/tft35a.dtbo
+    
     # Remove old DRM overrides if they exist
     sed -i '/^dtoverlay=piscreen,drm/d' /boot/config.txt
-    echo "dtoverlay=piscreen,drm" >> /boot/config.txt
+    sed -i '/^dtoverlay=tft35a/d' /boot/config.txt
+    
+    # Enable the primary KMS driver if not present
+    if ! grep -q "^dtoverlay=vc4-kms-v3d" /boot/config.txt; then
+        echo "dtoverlay=vc4-kms-v3d" >> /boot/config.txt
+    fi
+    
+    # Add the specific overlay with the DRM flag
+    echo "dtoverlay=tft35a,drm" >> /boot/config.txt
     
     echo "[3/3] Cleaning up legacy X11 driver overrides..."
     rm -f /etc/X11/xorg.conf.d/99-fbturbo.conf
