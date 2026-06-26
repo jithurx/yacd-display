@@ -46,7 +46,9 @@ sudo cp -rf ./boot/config-nomal.txt /boot/config.txt
 
 if [[ "$deb_ver" = "13.1" ]] || [[ "$deb_ver" > "13.1" ]]; then
 sudo sed -i '/ video/s/ video.*$//' /boot/firmware/cmdline.txt
+if [ -f /etc/xdg/lxsession/rpd-x/autostart ]; then
 sudo sed -i "/xrandr/d" /etc/xdg/lxsession/rpd-x/autostart
+fi
 #sudo cp -rf ./usr/cmdline.txt-original /boot/firmware/cmdline.txt
 #sudo cp ./etc/autostart /etc/xdg/lxsession/rpd-x/
 fi

@@ -39,7 +39,11 @@ fi
 
 if [[ "$deb_version" = "13.1" ]] || [[ "$deb_version" > "13.1" ]]; then
 sudo cp -rf ./usr/99-fbturbo-fbcp.conf  /usr/share/X11/xorg.conf.d/99-fbturbo.~
+if [ -d "/home/$username" ]; then
 sudo cp -rf ./etc/.bash_profile /home/$username/
+elif [ "$username" = "root" ]; then
+sudo cp -rf ./etc/.bash_profile /root/
+fi
 
 #sudo cp -rf ./etc/rc_x11.local /etc/rc.local
 fi
